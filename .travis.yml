@@ -1,0 +1,18 @@
+language: java
+jdk:
+  - openjdk14
+
+services:
+  - postgresql
+
+before_install:
+  - psql -c 'create database todolist;' -U postgres
+
+sudo: false
+
+notifications:
+  email:
+    recipients:
+      - suvorovev@mail.ru
+    on_success: always
+    on_failure: always

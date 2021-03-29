@@ -1,0 +1,5 @@
+DELETE FROM item;
+INSERT INTO item (id, description, create_time, edit_time, done_time, is_done) VALUES ('96910c34-eae3-4b0d-9149-18ed6c37c3b0', 'Проверить документы', CURRENT_TIMESTAMP - interval '20' day, null, CURRENT_TIMESTAMP + interval '50' day, false);
+INSERT INTO item (id, description, create_time, edit_time, done_time, is_done) VALUES ('72bfe8cd-ee7e-40b7-adc9-98328c235b86', 'Отправить документы', CURRENT_TIMESTAMP - interval '15' day, null, CURRENT_TIMESTAMP + interval '40' day, false);
+INSERT INTO item (id, description, create_time, edit_time, done_time, is_done) VALUES ('152dd421-331b-4458-adfc-de7eba223380', 'Подготовить отчет', CURRENT_TIMESTAMP - interval '10' day, null, CURRENT_TIMESTAMP + interval '30' day, false);
+INSERT INTO item (id, description, create_time, edit_time, done_time, is_done) VALUES ('d3608459-24c9-48fd-9cef-55c553b1a6d0', 'Посмотреть вебинар', CURRENT_TIMESTAMP - interval '5' day, null, CURRENT_TIMESTAMP + interval '20' day, false);
