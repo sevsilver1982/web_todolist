@@ -3,14 +3,14 @@ package dao;
 import model.Item;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import service.FilterKey;
+import service.Filter;
+import service.FilterEnum;
 import service.StoreHibernate;
 
 import java.util.List;
 import java.util.UUID;
 
 public final class ItemDaoImpl implements ItemDao {
-    private FilterKey filterKey = FilterKey.ALL;
 
     @Override
     public Item add(final Item item) {
@@ -24,7 +24,11 @@ public final class ItemDaoImpl implements ItemDao {
 
     @Override
     public List<Item> findAll() {
-        return filterKey.find();
+        return StoreHibernate.openSession().createQuery("FROM Item ORDER BY createTime", Item.class).getResultList();
+    }
+
+    public List<Item> findAll(final FilterEnum filterEnum) {
+        return new Filter(filterEnum).setFilter();
     }
 
     @Override
@@ -40,10 +44,6 @@ public final class ItemDaoImpl implements ItemDao {
             transaction.commit();
             return findById(item.getId()) == null;
         }
-    }
-
-    public void setFilterKey(final String option) {
-        this.filterKey = FilterKey.valueOf(option.toUpperCase());
     }
 
 }

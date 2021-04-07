@@ -5,6 +5,7 @@ import dao.ItemDaoImpl;
 import model.Item;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
+import service.FilterEnum;
 import service.JsonSerializerBoolean;
 
 import javax.servlet.ServletException;
@@ -36,8 +37,9 @@ public final class ServletIndex extends HttpServlet {
         response.setContentType("application/json");
 
         // фильтр по запросу
-        itemDaoImpl.setFilterKey(request.getParameter(JSON_FILTER_KEY));
-        List<Item> list = itemDaoImpl.findAll();
+        List<Item> list = itemDaoImpl.findAll(
+                FilterEnum.valueOf(request.getParameter(JSON_FILTER_KEY).toUpperCase())
+        );
 
         // отправить json
         try (OutputStream outputStream = response.getOutputStream()) {
