@@ -9,17 +9,36 @@ import service.StoreHibernate;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public final class ItemDaoImpl implements ItemDao {
 
-    @Override
-    public Item add(final Item item) {
+    private <T> T tx(final Function<Session, T> command) {
         try (Session session = StoreHibernate.openSession()) {
             Transaction transaction = session.beginTransaction();
-            Item object = (Item) session.merge(item);
-            transaction.commit();
-            return object;
+            try {
+                T object = command.apply(session);
+                transaction.commit();
+                return object;
+            } catch (Exception e) {
+                session.getTransaction().rollback();
+                throw e;
+            }
         }
+    }
+
+    @Override
+    public Item add(final Item item) {
+        return tx(session -> (Item) session.merge(item));
+    }
+
+    @Override
+    public Boolean delete(final Item item) {
+        tx(session -> {
+            session.delete(item);
+            return true;
+        });
+        return findById(item.getId()) == null;
     }
 
     @Override
@@ -34,16 +53,6 @@ public final class ItemDaoImpl implements ItemDao {
     @Override
     public Item findById(final UUID id) {
         return StoreHibernate.openSession().find(Item.class, id);
-    }
-
-    @Override
-    public Boolean delete(final Item item) {
-        try (Session session = StoreHibernate.openSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(item);
-            transaction.commit();
-            return findById(item.getId()) == null;
-        }
     }
 
 }
